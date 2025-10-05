@@ -1,11 +1,13 @@
 ﻿using BusinessLogic.DTO.Employees;
 using BusinessLogic.Services.Interfaces;
 using DataAccess.Models.Employees;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.ViewModels.Employees;
 
 namespace Presentation.Controllers
 {
+    [Authorize]
     public class EmployeesController : Controller
     {
         private readonly IEmployeeServices _employeeServices;
