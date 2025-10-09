@@ -34,7 +34,6 @@ namespace MVC03
             builder.Services.AddScoped<IEmployeeServices, EmployeeServices>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IAttachmentService, AttachmentService>();
-            //builder.Services.AddScoped<IServiceProvider, ServiceProvider>();
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
@@ -54,14 +53,12 @@ namespace MVC03
 
             var app = builder.Build();
 
-            // ✅ إنشاء قاعدة البيانات بأمان
             using (var scope = app.Services.CreateScope())
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                //dbContext.Database.EnsureCreated(); // ممكن تستخدم Migrate() لو عندك Migrations
+                dbContext.Database.EnsureCreated(); // ممكن تستخدم Migrate() لو عندك Migrations
             }
 
-            // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
@@ -73,7 +70,7 @@ namespace MVC03
 
             app.UseRouting();
 
-            app.UseAuthentication(); // ✅ مضاف عشان Identity تشتغل صح
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(

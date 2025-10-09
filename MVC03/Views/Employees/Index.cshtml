@@ -51,7 +51,7 @@
                     <td><i class="fa @(employee.IsActive ? "fa-solid fa-circle-check text-success" :"fa-times-circle text-danger")"></i></td>
                     <td>@employee.Gender</td>
 
-                    <partial name="_ButtonsPartialView" model="employee.Id" />
+                    <partial name="_ButtonsPartialView" model="employee.Id.ToString()" />
 
                     <td>
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@employee.Id">
