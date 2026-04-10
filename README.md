@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="mvc.png" alt="Masaaq Swagger UI" width="800">
+</p>
 # 👥 Employee Management System
 
 > *A robust, full-featured administrative dashboard built to manage departments, employees, users, and roles with complete CRUD capabilities.*
