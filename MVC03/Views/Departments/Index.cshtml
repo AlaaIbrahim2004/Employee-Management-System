@@ -48,7 +48,7 @@
                     <td>@Html.DisplayFor(d => department.Description)</td>
                     <td>@Html.DisplayFor(d => department.DateofCreation)</td>
 
-                    <partial name="_ButtonsPartialView" model="department.Id"/>
+                    <partial name="_ButtonsPartialView" model="department.Id.ToString()"/>
                     <td>
                       @*   <a class="btn btn-danger" asp-action="Delete" asp-route-id="@department.Id">
                             <i class="fas fa-trash"></i> Delete

@@ -2,11 +2,12 @@
 using BusinessLogic.Services.Classes;
 using BusinessLogic.Services.Interfaces;
 using DataAccess.Data;
+using DataAccess.Models.IdentityModels;
 using DataAccess.Repositories.Departments;
 using DataAccess.Repositories.Emplooyees;
 using DataAccess.Repositories.UOW;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
 
 namespace MVC03
 {
@@ -18,12 +19,11 @@ namespace MVC03
 
             // 🔹 Add services to the container
             builder.Services.AddControllersWithViews();
-            //builder.Services.AddScoped<AppDbContext>();
+
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
                 options.UseLazyLoadingProxies();
-
             });
 
             builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
@@ -34,14 +34,31 @@ namespace MVC03
             builder.Services.AddScoped<IEmployeeServices, EmployeeServices>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IAttachmentService, AttachmentService>();
+
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequiredLength = 6;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireDigit = true;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequiredUniqueChars = 3;
+                options.User.RequireUniqueEmail = true;
+                options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromDays(2);
+                options.Lockout.MaxFailedAccessAttempts = 5;
+            })
+            .AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders();
+
             var app = builder.Build();
+
             using (var scope = app.Services.CreateScope())
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                dbContext.Database.EnsureCreated();
+                dbContext.Database.EnsureCreated(); // ممكن تستخدم Migrate() لو عندك Migrations
             }
 
-            // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
@@ -53,11 +70,13 @@ namespace MVC03
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Home}/{action=Index}/{id?}"
+            );
 
             app.Run();
         }

@@ -1,10 +1,12 @@
 ﻿using BusinessLogic.DTO.Departments;
 using BusinessLogic.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.ViewModels.Departments;
 
 namespace Presentation.Controllers
 {
+    [Authorize]
     public class DepartmentsController : Controller
     {
         private readonly IDepartmentServices _departmentservices;
